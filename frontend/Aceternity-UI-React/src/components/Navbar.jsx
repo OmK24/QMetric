@@ -97,16 +97,15 @@ const Navbar = () => {
     setIsLoading(true);
     setError('');
 
-    if (isRegisterMode && formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const apiUrl = isRegisterMode
-        ? 'https://qmetric-2.onrender.com/auth/create-account'
-        : 'https://qmetric-2.onrender.com/auth/login';
+      // const apiUrl = isRegisterMode
+      //   ? 'https://qmetric-2.onrender.com/auth/create-account'
+      //   : 'https://qmetric-2.onrender.com/auth/login';
+
+       const apiUrl = isRegisterMode
+        ?  'http://localhost:80/auth/create-account'
+        :  'http://localhost:80/auth/login';
+
 
       const requestBody = isRegisterMode
         ? { userName: formData.userName, email: formData.email, password: formData.password }
@@ -132,7 +131,7 @@ const Navbar = () => {
       window.dispatchEvent(new Event('authStateChanged'));
       navigateTo('/');
     } catch (error) {
-      setError('Credentials not matched. Please try again');
+      setError(error.message || 'Credentials not matched. Please try again');
     } finally {
       setIsLoading(false);
     }
