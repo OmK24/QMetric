@@ -83,19 +83,26 @@ const UploadPage = () => {
     setError('');
   };
 
+  const createCO = () => ({ id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`, weight: "", blooms: "" });
+  const createModule = () => ({ id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`, name: "", hours: "" });
+
   const handleNumCOsChange = (e) => {
     const num = parseInt(e.target.value) || 0;
     setNumCOs(e.target.value);
-    if (num > 0 && num <= 20) { setCourseOutcomes(Array.from({ length: num }, () => ({ weight: "", blooms: "" }))); setError(''); }
-    else if (num > 20) setError('Maximum 20 course outcomes allowed');
+    if (num > 0 && num <= 20) {
+      setCourseOutcomes(Array.from({ length: num }, () => createCO()));
+      setError('');
+    } else if (num > 20) setError('Maximum 20 course outcomes allowed');
     else setCourseOutcomes([]);
   };
 
   const handleNumModulesChange = (e) => {
     const num = parseInt(e.target.value) || 0;
     setNumModules(e.target.value);
-    if (num > 0 && num <= 20) { setModules(Array.from({ length: num }, () => ({ name: "", hours: "" }))); setError(''); }
-    else if (num > 20) setError('Maximum 20 modules allowed');
+    if (num > 0 && num <= 20) {
+      setModules(Array.from({ length: num }, () => createModule()));
+      setError('');
+    } else if (num > 20) setError('Maximum 20 modules allowed');
     else setModules([]);
   };
 
@@ -340,7 +347,7 @@ const UploadPage = () => {
           ) : (
             <div className="space-y-3">
               {courseOutcomes.map((co, index) => (
-                <div key={index}
+                <div key={co.id}
                   className="bg-gray-700/30 border border-gray-600/40 rounded-xl p-4 group hover:border-gray-500/60 hover:bg-gray-700/40 transition-all">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
@@ -399,7 +406,7 @@ const UploadPage = () => {
           ) : (
             <div className="space-y-3">
               {modules.map((module, index) => (
-                <div key={index}
+                <div key={module.id}
                   className="bg-gray-700/30 border border-gray-600/40 rounded-xl p-4 group hover:border-gray-500/60 hover:bg-gray-700/40 transition-all">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
