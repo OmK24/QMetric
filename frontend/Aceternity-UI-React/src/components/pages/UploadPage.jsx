@@ -21,6 +21,28 @@ const UploadPage = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState('');
 
+  // CSS classes
+  const labelClass = "block text-gray-300 text-sm font-medium mb-2";
+  const inputClass = "w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all";
+
+  // SectionCard component
+  const SectionCard = ({ badge, title, subtitle, icon, children }) => (
+    <div className="bg-gray-800/50 border border-gray-700/60 rounded-2xl p-6">
+      <div className="flex items-center gap-3 mb-4">
+        {badge && <span className="px-3 py-1 bg-blue-500/15 border border-blue-500/30 text-blue-300 text-xs font-bold rounded-lg">{badge}</span>}
+        {icon && icon}
+        <div>
+          <h2 className="text-white font-bold text-lg">{title}</h2>
+          {subtitle && <p className="text-gray-400 text-sm">{subtitle}</p>}
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+
+  // Helper function
+  const getCurrentWeightSum = () => courseOutcomes.reduce((sum, co) => sum + (parseFloat(co.weight) || 0), 0);
+
   // Validation function
   const validateForm = () => {
     setError('');
@@ -52,22 +74,13 @@ const UploadPage = () => {
       if (!module.name.trim()) { setError(`Module ${i + 1} name is required`); return false; }
       if (!module.hours || parseFloat(module.hours) <= 0) { setError(`Module ${i + 1} must have valid teaching hours`); return false; }
     }
+
     return true;
   };
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError('');
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const handleAddCO = () => {
-    setCourseOutcomes([...courseOutcomes, { weight: "", blooms: "" }]);
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const handleAddModule = () => {
-    setModules([...modules, { name: "", hours: "" }]);
   };
 
   const handleNumCOsChange = (e) => {
@@ -84,6 +97,28 @@ const UploadPage = () => {
     if (num > 0 && num <= 20) { setModules(Array.from({ length: num }, () => ({ name: "", hours: "" }))); setError(''); }
     else if (num > 20) setError('Maximum 20 modules allowed');
     else setModules([]);
+  };
+
+  const deleteCO = (index) => {
+    setCourseOutcomes(courseOutcomes.filter((_, i) => i !== index));
+  };
+
+  const handleCOChange = (index, field, value) => {
+    const updated = [...courseOutcomes];
+    updated[index][field] = value;
+    setCourseOutcomes(updated);
+    setError('');
+  };
+
+  const deleteModule = (index) => {
+    setModules(modules.filter((_, i) => i !== index));
+  };
+
+  const handleModuleChange = (index, field, value) => {
+    const updated = [...modules];
+    updated[index][field] = value;
+    setModules(updated);
+    setError('');
   };
 
   const isValidFileType = (f) =>
@@ -128,8 +163,8 @@ const UploadPage = () => {
       const token = sessionStorage.getItem('accessToken') || localStorage.getItem('accessToken');
       if (!token) throw new Error('No authentication token found. Please login first.');
 
-      // const response = await fetch('http://localhost:80/upload/totext', {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/upload/totext`, {
+      const response = await fetch('http://localhost:80/upload/totext', {
+      // const response = await fetch(`${process.env.REACT_APP_API_URL}/upload/totext`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formDataToSend

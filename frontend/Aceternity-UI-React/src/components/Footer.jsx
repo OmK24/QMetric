@@ -67,8 +67,7 @@ const Footer = () => {
         <div className="mt-10 pt-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           <span>© 2025 QMetric — Automated Question Paper Quality Analysis System. All rights reserved.</span>
           <div className="flex items-center gap-1">
-            <span>Built with</span>
-            <span className="text-red-400 mx-1">♥</span>
+            <span>Built </span>
             <span>by the QMetric Team</span>
           </div>
         </div>

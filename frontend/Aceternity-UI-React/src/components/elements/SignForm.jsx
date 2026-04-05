@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "../../utils/cn.js";
@@ -7,12 +7,9 @@ import { cn } from "../../utils/cn.js";
 export function SignupFormDemo() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [captchaInput, setCaptchaInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [captcha, setCaptcha] = useState(null);
-  const [captchaId, setCaptchaId] = useState(null);
 
   // Pre-existing login credentials for reference
   const demoAccounts = [
@@ -23,35 +20,14 @@ export function SignupFormDemo() {
     { email: "test@user5.com", password: "password123" },
   ];
 
-  // Fetch CAPTCHA on component mount
-  useEffect(() => {
-    fetchCaptcha();
-  }, []);
-
-  const fetchCaptcha = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/captcha`);
-      const data = await response.json();
-      if (!data.error) {
-        setCaptcha(data.captcha);
-        setCaptchaId(data.captchaId);
-        setCaptchaInput("");
-        setError("");
-      }
-    } catch (err) {
-      console.error("Error fetching CAPTCHA:", err);
-      setError("Failed to load CAPTCHA");
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setSuccess("");
 
-    if (!email || !password || !captchaInput) {
-      setError("All fields including CAPTCHA are required");
+    if (!email || !password) {
+      setError("All fields are required");
       setLoading(false);
       return;
     }
@@ -64,9 +40,7 @@ export function SignupFormDemo() {
         },
         body: JSON.stringify({ 
           email, 
-          password,
-          captchaId,
-          captchaInput 
+          password
         }),
       });
 
@@ -74,10 +48,6 @@ export function SignupFormDemo() {
 
       if (data.error) {
         setError(data.message || "Login failed");
-        // Reload CAPTCHA on wrong attempt
-        if (data.message.includes("CAPTCHA")) {
-          await fetchCaptcha();
-        }
       } else {
         setSuccess("Login successful!");
         console.log("Access Token:", data.accessToken);
@@ -87,7 +57,6 @@ export function SignupFormDemo() {
         
         setEmail("");
         setPassword("");
-        setCaptchaInput("");
         setTimeout(() => setSuccess(""), 3000);
         // Redirect or update app state here
       }
@@ -146,34 +115,6 @@ export function SignupFormDemo() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </LabelInputContainer>
-
-        {/* CAPTCHA Section */}
-        <LabelInputContainer className="mb-6">
-          <Label>Security Check (CAPTCHA)</Label>
-          <div className="bg-neutral-700 dark:bg-neutral-900 p-4 rounded-md mb-3 border border-neutral-600">
-            <div className="font-mono text-2xl font-bold text-center text-cyan-400 tracking-widest select-none">
-              {captcha || "Loading..."}
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Input
-              id="captcha"
-              placeholder="Enter the text above"
-              type="text"
-              value={captchaInput}
-              onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
-              className="flex-1"
-            />
-            <button
-              type="button"
-              onClick={fetchCaptcha}
-              className="px-4 py-2 bg-neutral-700 hover:bg-neutral-600 rounded-md text-white text-sm font-medium transition-colors"
-              title="Refresh CAPTCHA"
-            >
-              🔄
-            </button>
-          </div>
         </LabelInputContainer>
 
         <button

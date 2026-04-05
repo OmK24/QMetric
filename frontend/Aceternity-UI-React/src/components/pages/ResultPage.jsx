@@ -50,16 +50,16 @@ const Gauge = ({ value = 0, size = 220 }) => {
   ];
 
   // Create arc segments
-  const arcSegments = backgroundArcs.map((segment, idx) => {
-    const segStartAngle = startAngle + (segment.start / 100) * (maxAngle - startAngle);
-    const segEndAngle = startAngle + (segment.end / 100) * (maxAngle - startAngle);
-    const path = describeArc(cx, cy, r, segStartAngle, segEndAngle);
+  // const arcSegments = backgroundArcs.map((segment, idx) => {
+  //   const segStartAngle = startAngle + (segment.start / 100) * (maxAngle - startAngle);
+  //   const segEndAngle = startAngle + (segment.end / 100) * (maxAngle - startAngle);
+  //   const path = describeArc(cx, cy, r, segStartAngle, segEndAngle);
 
-    // Use midpoint color for simplicity
-    const midColor = segment.color1; // Could blend, but solid color per segment is cleaner
+  //   // Use midpoint color for simplicity
+  //   const midColor = segment.color1; // Could blend, but solid color per segment is cleaner
 
-    return { path, color: midColor, idx };
-  });
+  //   return { path, color: midColor, idx };
+  // });
 
   const bgPath = describeArc(cx, cy, r, startAngle, maxAngle);
   const fgPath = describeArc(cx, cy, r, startAngle, currentAngle);
@@ -156,11 +156,11 @@ const ResultPage = () => {
       setLoading(true);
       setError(null);
       
-      // const response = await fetch('http://localhost:80/upload/totext', {
-      const response = await fetch('https://qmetric-2.onrender.com/upload/totext', {
+      const response = await fetch('http://localhost:80/upload/totext', {
+      // const response = await fetch('https://qmetric-2.onrender.com/upload/totext', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       });

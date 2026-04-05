@@ -52,7 +52,7 @@ async function seedUsers() {
       }
     }
 
-    console.log('\n✅ Seeding complete!');
+    console.log('\nSeeding complete!');
     console.log('\nTest Accounts:');
     testUsers.forEach(user => {
       console.log(`  - Email: ${user.email}, Password: ${user.password}`);
@@ -60,7 +60,7 @@ async function seedUsers() {
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error seeding users:', error.message);
+    console.error(' Error seeding users:', error.message);
     process.exit(1);
   }
 }

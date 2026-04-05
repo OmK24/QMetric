@@ -109,6 +109,7 @@ export function AnimatedModalDemo() {
             <a
               href="https://www.linkedin.com/in/ashutosh-raj-gupta-18230820b/"
               target="_blank"
+              rel="noreferrer"
               className="no-underline"
             >
               <button className="w-40 h-10 rounded-xl bg-black border dark:border-white border-transparent text-white text-sm">
@@ -118,6 +119,7 @@ export function AnimatedModalDemo() {
             <a
               href="https://github.com/AshutoshRajGupta"
               target="_blank"
+              rel="noreferrer"
               className="no-underline"
             >
               <button className="w-40 h-10 rounded-xl bg-white text-black border border-black text-sm">
